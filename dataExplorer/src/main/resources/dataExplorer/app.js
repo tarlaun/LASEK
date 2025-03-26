@@ -213,7 +213,7 @@ function StyleModal({ dataset, datasetStyle, workspace, closeModal, updateStyle 
   };
 
   const callLLMForStyling = async (prompt) => {
-    const apiKey = 'AIzaSyDUEHGyAGJMxvtZVTbquPUd2N9zxIXkt4g'; // Replace with the real key
+    const apiKey = 'ENTER API KEY HERE'; // Replace with the real key
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     try {
@@ -295,7 +295,7 @@ function StyleModal({ dataset, datasetStyle, workspace, closeModal, updateStyle 
   `;
   };
   const callLLMForSuggestions = async (prompt) => {
-    const apiKey = 'AIzaSyDUEHGyAGJMxvtZVTbquPUd2N9zxIXkt4g'; // Replace with the real key
+    const apiKey = 'ENTER API KEY HERE'; // Replace with the real key
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     try {
@@ -671,7 +671,7 @@ function StyleModal({ dataset, datasetStyle, workspace, closeModal, updateStyle 
   };
 // LLM Calling function for DateTime parsing
   const callLLM = async (prompt) => {
-    const apiKey = 'AIzaSyDUEHGyAGJMxvtZVTbquPUd2N9zxIXkt4g'; // Replace with your Gemini API key
+    const apiKey = 'ENTER API KEY HERE'; // Replace with your Gemini API key
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     try {
