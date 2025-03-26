@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='utf-8'?>
+<gpx xmlns="http://www.topografix.com/GPX/1/0" version="1.0" creator="OSM gpx_dump.py">
+  <trk>
+    <name>Track 0</name>
+    <number>0</number>
+    <trkseg>
+      <trkpt lat="55.1930890" lon="30.2439500">
+        <ele>188.92</ele>
+        <time>2011-05-08T07:07:20Z</time>
+      </trkpt>
+      <trkpt lat="55.1931000" lon="30.2439480">
+        <ele>189.10</ele>
+        <time>2011-05-08T07:07:21Z</time>
+      </trkpt>
+      <trkpt lat="55.1931110" lon="30.2439440">
+        <ele>189.07</ele>
+        <time>2011-05-08T07:07:22Z</time>
+      </trkpt>
+      <trkpt lat="55.1931340" lon="30.2439380">
+        <ele>189.17</ele>
+        <time>2011-05-08T07:07:23Z</time>
+      </trkpt>
+      <trkpt lat="55.1931720" lon="30.2439270">
+        <ele>188.95</ele>
+        <time>2011-05-08T07:07:24Z</time>
+      </trkpt>
+      <trkpt lat="55.1932180" lon="30.2439120">
+        <ele>188.60</ele>
+        <time>2011-05-08T07:07:25Z</time>
+      </trkpt>
+      <trkpt lat="55.1932720" lon="30.2438930">
+        <ele>188.57</ele>
+        <time>2011-05-08T07:07:26Z</time>
+      </trkpt>
+      <trkpt lat="55.1933290" lon="30.2438770">
+        <ele>188.60</ele>
+        <time>2011-05-08T07:07:27Z</time>
+      </trkpt>
+      <trkpt lat="55.1933860" lon="30.2438600">
+        <ele>188.39</ele>
+        <time>2011-05-08T07:07:28Z</time>
+      </trkpt>
+      <trkpt lat="55.1934470" lon="30.2438450">
+        <ele>188.30</ele>
+        <time>2011-05-08T07:07:29Z</time>
+      </trkpt>
+      <trkpt lat="55.1935080" lon="30.2438350">
+        <ele>188.25</ele>
+        <time>2011-05-08T07:07:30Z</time>
+      </trkpt>
+      <trkpt lat="55.1935650" lon="30.2438260">
+        <ele>188.13</ele>
+        <time>2011-05-08T07:07:31Z</time>
+      </trkpt>
+      <trkpt lat="55.1936230" lon="30.2438140">
+        <ele>187.97</ele>
+        <time>2011-05-08T07:07:32Z</time>
+      </trkpt>
+      <trkpt lat="55.1936680" lon="30.2438030">
+        <ele>188.18</ele>
+        <time>2011-05-08T07:07:33Z</time>
+      </trkpt>
+      <trkpt lat="55.1937180" lon="30.2437950">
+        <ele>188.23</ele>
+        <time>2011-05-08T07:07:34Z</time>
+      </trkpt>
+      <trkpt lat="55.1937600" lon="30.2437860">
+        <ele>188.26</ele>
+        <time>2011-05-08T07:07:35Z</time>
+      </trkpt>
+      <trkpt lat="55.1937940" lon="30.2437820">
+        <ele>188.09</ele>
+        <time>2011-05-08T07:07:36Z</time>
+      </trkpt>
+      <trkpt lat="55.1938250" lon="30.2437760">
+        <ele>188.06</ele>
+        <time>2011-05-08T07:07:37Z</time>
+      </trkpt>
+      <trkpt lat="55.1938550" lon="30.2437840">
+        <ele>188.19</ele>
+        <time>2011-05-08T07:07:38Z</time>
+      </trkpt>
+      <trkpt lat="55.1938820" lon="30.2438070">
+        <ele>188.14</ele>
+        <time>2011-05-08T07:07:39Z</time>
+      </trkpt>
+      <trkpt lat="55.1939010" lon="30.2438390">
+        <ele>188.29</ele>
+        <time>2011-05-08T07:07:40Z</time>
+      </trkpt>
+      <trkpt lat="55.1939090" lon="30.2438790">
+        <ele>188.23</ele>
+        <time>2011-05-08T07:07:41Z</time>
+      </trkpt>
+      <trkpt lat="55.1939130" lon="30.2439190">
+        <ele>188.09</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>

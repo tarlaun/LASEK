@@ -1,0 +1,6 @@
+edu.ucr.cs.bdlab.beast.io.geojsonv2.GeoJSONSourcev2
+edu.ucr.cs.bdlab.beast.io.shapefilev2.ShapefileDataSourcev2
+edu.ucr.cs.bdlab.beast.io.RTreeSource
+edu.ucr.cs.bdlab.beast.io.gpxv2.GPXSource
+edu.ucr.cs.bdlab.beast.io.kmlv2.KMLSourcev2
+edu.ucr.cs.bdlab.beast.io.kmlv2.KMZSourcev2

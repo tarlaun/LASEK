@@ -1,0 +1,65 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+  <id>bin</id>
+  <formats>
+    <format>dir</format>
+    <format>tar.gz</format>
+    <format>zip</format>
+  </formats>
+  <baseDirectory>
+    beast-${version}
+  </baseDirectory>
+  <fileSets>
+    <fileSet>
+      <outputDirectory>bin</outputDirectory>
+      <directory>src/bin</directory>
+      <fileMode>755</fileMode>
+      <filtered>true</filtered>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <outputDirectory></outputDirectory>
+      <source>../README.md</source>
+    </file>
+    <file>
+      <outputDirectory></outputDirectory>
+      <source>../LICENSE</source>
+    </file>
+  </files>
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <includes>
+        <include>edu.ucr.cs.bdlab:jhdf</include>
+        <include>javax.media:jai_core</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+  <moduleSets>
+    <moduleSet>
+
+      <!-- Enable access to all projects in the current multimodule build! -->
+      <useAllReactorProjects>true</useAllReactorProjects>
+
+      <!-- Now, select which projects to include in this module-set. -->
+      <includes>
+        <include>edu.ucr.cs.bdlab:common</include>
+        <include>edu.ucr.cs.bdlab:cg</include>
+        <include>edu.ucr.cs.bdlab:io</include>
+        <include>edu.ucr.cs.bdlab:raptor</include>
+        <include>edu.ucr.cs.bdlab:visualization</include>
+        <include>edu.ucr.cs.bdlab:beast-spark</include>
+        <include>edu.ucr.cs.bdlab:dataExplorer</include>
+        <include>edu.ucr.cs.bdlab:satex</include>
+      </includes>
+
+      <binaries>
+        <includeDependencies>false</includeDependencies>
+        <outputDirectory>lib</outputDirectory>
+        <unpack>false</unpack>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+</assembly>

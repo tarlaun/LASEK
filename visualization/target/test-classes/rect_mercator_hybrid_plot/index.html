@@ -1,0 +1,47 @@
+<!-- Based on the examples at
+ https://openlayers.org/en/latest/doc/quickstart.html
+ https://openlayers.org/en/latest/examples/xyz.html and
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DaVinci Visualization</title>
+  <link rel='stylesheet' href='https://openlayers.org/en/v5.3.0/css/ol.css' type='text/css'>
+  <script src='https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js'></script>
+  <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+  <script src='https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL'></script>
+  <style>
+    html, body, #map {
+      height: 100%;
+      margin: 0px;
+      padding: 0px
+    }
+  </style>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+var map = new ol.Map({
+  target: 'map',
+  layers: [
+    new ol.layer.Tile({
+      source: new ol.source.OSM()
+    }),
+    new ol.layer.Tile({
+      source: new ol.source.XYZ({
+        url: 'tile-{z}-{x}-{y}.png',
+        minZoom: 0,
+        maxZoom: 2,
+        tileSize: [256, 256],
+        wrapX: false
+      })
+    })
+  ],
+  view: new ol.View({
+    center: [0, 0],
+    zoom: 1
+  })
+});
+</script>
+</body>
+</html>

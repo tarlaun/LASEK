@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>edu.ucr.cs.bdlab</groupId>
+    <artifactId>beast</artifactId>
+    <version>0.10.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>satex</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>edu.ucr.cs.bdlab</groupId>
+      <artifactId>io</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>edu.ucr.cs.bdlab</groupId>
+      <artifactId>beast-spark</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.bio</groupId>
+      <artifactId>npy</artifactId>
+      <version>0.3.5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_${scala.compat.version}</artifactId>
+      <version>${spark.version}</version>
+      <scope>${spark.dependency}</scope>
+    </dependency>
+  </dependencies>
+</project>

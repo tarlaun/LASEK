@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright 2018 University of California, Riverside
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<beast>
+  <Operations>
+    <Operation>edu.ucr.cs.bdlab.beast.io.Cat</Operation>
+  </Operations>
+  <!-- Classes that implement the interface SpatialPartitioner
+    which are also annotated with class SpatialPartitioner.Metadata -->
+  <SpatialPartitioners>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.GridPartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.KDTreePartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.AbstractRTreeBBPartitioner$RTreeGuttmanBBPartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.AbstractRTreeBBPartitioner$RStarTreeBBPartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.AbstractRTreeBBPartitioner$RRStarTreeBBPartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.HCurvePartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.RGrovePartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.RSGrovePartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.RRSGrovePartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.STRPartitioner</Partitioner>
+    <Partitioner>edu.ucr.cs.bdlab.beast.indexing.ZCurvePartitioner</Partitioner>
+  </SpatialPartitioners>
+
+  <!-- Classes that implement the interface FeatureWriter
+  which are also annotated with class FeatureWriter.Metadata -->
+  <Writers>
+    <Writer>edu.ucr.cs.bdlab.beast.io.CSVFeatureWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.io.shapefile.ShapefileFeatureWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.io.shapefile.CompressedShapefileWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.io.GeoJSONFeatureWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.io.KMLFeatureWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.io.KMZFeatureWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.indexing.RTreeFeatureWriter</Writer>
+    <Writer>edu.ucr.cs.bdlab.beast.io.JsonWKTWriter</Writer>
+  </Writers>
+
+  <!-- Classes that implement the interface FeatureReader
+  which are also annotated with class FeatureReader.Metadata -->
+  <Readers>
+    <Reader>edu.ucr.cs.bdlab.beast.io.CSVFeatureReader</Reader>
+    <Reader>edu.ucr.cs.bdlab.beast.io.shapefile.ShapefileFeatureReader</Reader>
+    <Reader>edu.ucr.cs.bdlab.beast.io.GeoJSONFeatureReader</Reader>
+    <Reader>edu.ucr.cs.bdlab.beast.io.GPXReader</Reader>
+    <Reader>edu.ucr.cs.bdlab.beast.indexing.RTreeFeatureReader</Reader>
+    <Reader>edu.ucr.cs.bdlab.beast.io.JsonWKTReader</Reader>
+  </Readers>
+</beast>

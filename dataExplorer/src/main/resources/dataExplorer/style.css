@@ -1,0 +1,464 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* 100% of the viewport height */
+    overflow: hidden; /* Prevent scrolling on the entire page */
+    font-family: Arial, sans-serif;
+}
+
+#root, #root > div {
+    display: flex;
+    height: 100%; /* Fill the height of the parent */
+    width: 100%; /* Fill the width of the parent */
+}
+
+.sidebar {
+    display: flex; /* Use flexbox layout */
+    flex-direction: column; /* Stack children vertically */
+    height: 100vh; /* Full height of the viewport */
+    overflow-y: hidden;
+    width: 25%; /* Fixed width for the sidebar */
+    background-color: #eef2f7;
+    padding: 10px;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.map-viewer {
+    width: 75%; /* Adjust width as needed */
+    height: 100%; /* Adjust height as needed */
+    background-color: #ddd; /* For visibility */
+}
+
+#map {
+    width: 100%;
+    height: 100%; /* This is crucial for the map's visibility */
+}
+
+.logo img {
+    width: 100%; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* To center the image if needed */
+    margin: 0 auto; /* Center the image */
+    padding-bottom: 20px;
+}
+
+.workspace-list {
+  border: 1px solid #ccc; /* Adds a border around the workspace list */
+  margin-bottom: 20px; /* Adds some space below the list */
+  min-height: 100px;
+  background-color: white;
+}
+
+.workspace-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee; /* Separates each workspace item */
+}
+
+.workspace-item.selected {
+  background-color: #ffffaf; /* Highlight color for selected workspace */
+}
+
+.workspace-actions i {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.new-workspace-button {
+  margin-top: 10px;
+}
+
+.workspace-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adds space between form elements */
+}
+
+.workspace-details input,
+.workspace-details textarea {
+  width: 100%; /* Full width */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.workspace-details textarea {
+  resize: vertical; /* Allows vertical resize */
+}
+
+.workspace-name {
+  text-align: center;
+}
+
+.workspace-name, .toolbar, .logo {
+  /* Ensure these sections do not expand too much */
+  flex-shrink: 0; /* Prevents them from shrinking too much in flex container */
+  /* Set max-height as needed, or use flex properties to manage space */
+}
+
+.close-workspace-button {
+  float: right;
+  color: darkred;
+}
+
+.dataset-form {
+    display: none; /* Hidden by default */
+}
+
+/* Dataset List */
+.dataset-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px 5px 0;
+}
+
+.selected, .modal {
+    background-color: #e1e1e1;
+}
+
+.dataset-name {
+    cursor: pointer;
+    flex-grow: 1; /* Allows the name to take up the available space */
+}
+
+.dataset-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.dataset-in-progress {
+    background: linear-gradient(to right, #e0e000 0%, #e0e000 100%);
+    background-repeat: no-repeat;
+    transition: background-size 0.5s;
+}
+
+.dataset-error {
+    color: red;
+}
+
+.dataset-error .dataset-name {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.dataset-error .dataset-name::before {
+    content: '\26A0';
+}
+
+/* List of datasets to add or remove from an existing workspace */
+.dataset-list {
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  min-height: 100px;
+  max-height: calc(100vh - 250px);
+  background-color: white;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.dataset-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.dataset-actions i {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.red-icon {
+  color: red;
+}
+
+.green-icon {
+  color: green;
+}
+
+.dataset-details {
+  overflow-y: auto; /* Allow vertical scrolling within dataset-details */
+  margin-bottom: 20px; /* Provide some space below */
+  flex-grow: 1;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-evenly; /* Evenly space items */
+}
+
+.icon-button {
+  cursor: pointer;
+  transition: transform 0.3s ease; /* Smooth transition for hover effect */
+  font-size: 20px; /* Adjust size as needed */
+  padding: 5px;
+}
+
+.icon-button:hover {
+  transform: scale(1.1); /* Slightly enlarge icon on hover */
+  color: darkred;
+  background-color: #f0f0f0; /* Light grey background for better contrast */
+  border: 1px solid #d1d1d1; /* Light grey border to simulate the light edge */
+  padding: 3px;
+  box-shadow:
+    2px 2px 5px rgba(0, 0, 0, 0.2), /* Outer shadow for depth */
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8), /* Top-left inner highlight */
+    inset -1px -1px 2px rgba(0, 0, 0, 0.2); /* Bottom-right inner shadow for depth */
+}
+
+.icon-button.disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Button and Input Styling */
+button {
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    background-color: #4CAF50; /* Primary color */
+    color: white;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input[type="number"], input[type="color"], input[type="text"], select {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.ol-control button {
+  /* To use font-awesome icons in the label */
+  font-family: 'Font Awesome 5 Pro';
+}
+
+/* Loading icon */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-icon {
+    display: inline-block;
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #000;
+    animation: rotate 1s linear infinite;
+}
+
+
+/* Style Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: backdrop-filter 0.3s, -webkit-backdrop-filter 0.3s;
+    z-index: 999;
+}
+
+.modal {
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    position: relative;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.modal form .controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal form .controls label {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.modal form .controls label span {
+    white-space: nowrap;
+}
+
+.modal form .controls label textarea {
+    grid-column: span 2; /* Make textarea span both columns */
+    resize: vertical; /* Allow only vertical resizing */
+    height: 100px; /* Adjust the height as needed */
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between; /* Equal spacing between buttons */
+    padding-top: 10px; /* Space above the buttons */
+}
+
+.buttons-container button {
+    flex: 1; /* Each button takes equal width */
+    margin: 0 5px; /* Spacing between buttons */
+}
+
+.tabs .tab {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent; /* Add a transparent border for a consistent layout */
+    transition: background-color 0.2s, border-color 0.2s;
+    display: inline-block;
+}
+
+.tabs input {
+    display: none;
+}
+
+.tabs .tab:hover {
+    background-color: #f0f0f0; /* Change as needed */
+}
+
+.tabs .tab:focus {
+    outline: none;
+}
+
+/* Style for the active tab */
+.tabs .tab.active {
+    border-color: #4CAF50; /* Use a distinct color to highlight the active tab */
+    color: #4CAF50; /* Optionally change the text color as well */
+}
+
+.circle-preview {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    background-color: rgb(247, 247, 186);
+}
+
+.drag-over-indicator {
+    height: 2px;
+    background-color: blue;
+    width: 100%;
+}
+
+/* Schema */
+.schema-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    font-size: 0.7em;
+    padding-right: 5px;
+}
+
+/* Icons based on data type */
+.schema-icon[data-type="string"]::before {
+    content: "\1F521"; /* HTML code for string icon */
+}
+
+.schema-icon[data-type="integer"]::before,
+.schema-icon[data-type="number"]::before {
+    content: "\1F522"; /* HTML code for number icon */
+}
+
+.schema-icon[data-type="geometry"]::before {
+    content: "\1F30E"; /* HTML code for geometry icon */
+}
+
+.schema-icon[data-type="default"]::before {
+    content: "\2753"; /* HTML code for default icon */
+}
+
+/* Create dataset modal */
+.error-message {
+    color: #d32f2f; /* Red color for error text */
+    background-color: #ffebee; /* Light red background */
+    border: 1px solid #d32f2f; /* Red border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside the error box */
+    margin: 10px 0; /* Margin outside the error box */
+    font-size: 1em; /* Slightly larger font size */
+    font-weight: bold; /* Bold font weight */
+    text-align: center; /* Centered text */
+    animation: fadeIn 0.5s; /* Fade-in animation */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+/* CSV Table */
+.csv-table-container {
+  max-width: 600px;
+  max-height: 400px; /* Adjust this value based on your needs */
+  overflow: auto; /* Enables scrolling */
+  margin-top: 20px; /* Optional: Adds some space above the table */
+}
+
+.csv-table {
+  width: 1000px;
+  border-collapse: collapse;
+}
+
+.csv-table th, .csv-table td {
+  border: 1px solid #ddd; /* Optional: Adds borders to cells */
+  padding: 8px; /* Optional: Adds padding inside cells */
+}
+
+.csv-table th {
+  background-color: #f2f2f2; /* Optional: Different background for header */
+  text-align: left;
+}
+
+/* File system browser */
+.file-system-list {
+  list-style: none;
+  padding: 0;
+}
+
+.file-system-list li {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.file-system-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.file-system-list i {
+  margin-right: 10px;
+}
+
+.file-system-list i.fa-folder, .icon-button.fa-folder {
+  color: orange;
+}

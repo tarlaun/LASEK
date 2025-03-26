@@ -1,0 +1,20 @@
+{
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates": [100, 0]
+   },
+   "properties": {
+   	  "tags": {
+   	    "name": "CA",
+   	    "type": "state"
+   	  },
+   	  "labels": ["label1", "label2"],
+   	  "values": {
+   	    "area": 100.0,
+   	    "length": 200
+   	  },
+   	  "location": [1.0, 2.0],
+   	  "other": null
+   }
+}

@@ -1,0 +1,3 @@
+{"geometry": {"type": "Polygon", "coordinates": [[[122, 10], [123, 10], [123, 11], [122, 10]]]}, "properties": {}, "type": "Feature"}
+{"geometry": {"type": "Linestring", "coordinates": [[100, 30], [200, 40]]}, "properties": {"name": "obj2"}, "type": "Feature"}
+{"geometry": {"type": "Point", "coordinates": [144, 55]}, "type": "Feature"}
