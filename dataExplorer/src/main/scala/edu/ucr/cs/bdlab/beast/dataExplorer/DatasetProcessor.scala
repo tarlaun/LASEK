@@ -364,32 +364,34 @@ class DatasetProcessor(datasetName: String, dbConnection: java.sql.Connection, d
    * @param dbConnection The database connection to use for fetching and updating the dataset.
    * @param loadRawData  A function that loads the raw data of the dataset into a DataFrame.
    * @throws RuntimeException If the dataset is not found in the database. */
-  private[dataExplorer] def summarizeData(): Unit = {
-    val startTime = System.nanoTime()
-    using(dbConnection.prepareStatement("SELECT * FROM datasets WHERE name = ?")) { preparedStatement =>
-      val queryStartTime = System.nanoTime()
-      preparedStatement.setString(1, datasetName)
-      val resultSet = preparedStatement.executeQuery()
-      val queryEndTime = System.nanoTime()
-      println(f"Database query time: ${(queryEndTime - queryStartTime) / 1e6}%.4f ms")
+private[dataExplorer] def summarizeData(): Unit = {
+  val startTime = System.nanoTime()
+  using(dbConnection.prepareStatement("SELECT * FROM datasets WHERE name = ?")) { preparedStatement =>
+    val queryStartTime = System.nanoTime()
+    preparedStatement.setString(1, datasetName)
+    val resultSet: ResultSet = preparedStatement.executeQuery()
+    val queryEndTime = System.nanoTime()
+    println(s"Database query time: ${(queryEndTime - queryStartTime) / 1e6} ms")
 
-      if (!resultSet.next())
-        throw new RuntimeException(s"Dataset '$datasetName' not found in DB")
+    if (!resultSet.next())
+      throw new RuntimeException(s"Dataset '$datasetName' not found in DB")
 
-      val loadRawDataStartTime = System.nanoTime()
-      val rawData = loadRawData
-      val loadRawDataEndTime = System.nanoTime()
-      println(f"Raw data loading time: ${(loadRawDataEndTime - loadRawDataStartTime) / 1e6}%.4f ms")
+    val loadRawDataStartTime = System.nanoTime()
+    val rawData: DataFrame = loadRawData
+    val loadRawDataEndTime = System.nanoTime()
+    println(s"Raw data loading time: ${(loadRawDataEndTime - loadRawDataStartTime) / 1e6} ms")
 
-      val schema = rawData.schema
-      val topK = 5
+    val schema = rawData.schema
+    val topK = 5 // Define K here for top K values
 
-      val aggregateStartTime = System.nanoTime()
-      val aggregateExpressions = schema.fields.flatMap { field =>
-        val columnName = field.name
-        val dataType = field.dataType
+    val aggregateStartTime = System.nanoTime()
+    // Prepare aggregate expressions for a single pass over the data
+    val aggregateExpressions = schema.fields.flatMap { field =>
+      val columnName = field.name
+      val dataType = field.dataType
 
-        try dataType match {
+      try {
+        dataType match {
           case _: NumericType =>
             Seq(
               min(col(columnName)).as(s"${columnName}_min"),
@@ -400,12 +402,14 @@ class DatasetProcessor(datasetName: String, dbConnection: java.sql.Connection, d
               count(col(columnName)).as(s"${columnName}_count"),
               countDistinct(col(columnName)).as(s"${columnName}_countDistinct"),
               expr(s"collect_list($columnName)").as(s"${columnName}_topKList")
+
             )
           case StringType =>
             Seq(
               min(length(col(columnName))).as(s"${columnName}_minLength"),
               max(length(col(columnName))).as(s"${columnName}_maxLength"),
               expr(s"collect_list($columnName)").as(s"${columnName}_topKList")
+
             )
           case BooleanType =>
             Seq(
@@ -415,91 +419,142 @@ class DatasetProcessor(datasetName: String, dbConnection: java.sql.Connection, d
             )
           case _ =>
             Seq.empty[Column]
-        } catch {
-          case ex: Exception =>
-            println(s"Error preparing aggregate expressions for column: $columnName")
-            throw ex
         }
+      } catch {
+        case ex: Exception =>
+          println(s"Error preparing aggregate expressions for column: $columnName")
+          throw ex
       }
-      val aggregateEndTime = System.nanoTime()
-      println(f"Aggregate expressions preparation time: ${(aggregateEndTime - aggregateStartTime) / 1e6}%.4f ms")
+    }
+    val aggregateEndTime = System.nanoTime()
+    println(s"Aggregate expressions preparation time: ${(aggregateEndTime - aggregateStartTime) / 1e6} ms")
 
-      val queryExecutionStartTime = System.nanoTime()
-      val statsRow = rawData.select(aggregateExpressions: _*).first()
-      val queryExecutionEndTime = System.nanoTime()
-      println(f"Aggregate query execution time: ${(queryExecutionEndTime - queryExecutionStartTime) / 1e6}%.4f ms")
+    val queryExecutionStartTime = System.nanoTime()
+    println(s"Schema: ${schema.treeString}")
+    println(s"Aggregate expressions: ${aggregateExpressions.mkString(", ")}")
+    schema.fields.foreach { field =>
+      println(s"Processing column: ${field.name} with type: ${field.dataType}")
+    }
+    val statsRow = rawData.select(aggregateExpressions: _*).first() //Holds results of aggregation operations
+    val queryExecutionEndTime = System.nanoTime()
+    println(s"Aggregate query execution time: ${(queryExecutionEndTime - queryExecutionStartTime) / 1e6} ms")
 
-      val schemaUpdateStartTime = System.nanoTime()
-      val updatedFields = schema.fields.map { field =>
-        val columnName = field.name
-        val dataType = field.dataType
-        val existingMetadata = field.metadata
+    val schemaUpdateStartTime = System.nanoTime()
+    val updatedFields = schema.fields.map { field =>
+      val columnName = field.name
+      val dataType = field.dataType
+      val existingMetadata = field.metadata
 
-        try {
-          val updatedMetadata = dataType match {
-            case _: NumericType =>
-              def getDoubleStat(statName: String) = statsRow.getAs[Any](statName) match {
+      try {
+        val updatedMetadata = dataType match {
+          case _: NumericType =>
+            def getDoubleStat(statName: String): Double = {
+              statsRow.getAs[Any](statName) match {
                 case n: Number => n.doubleValue()
                 case null => Double.NaN
                 case _ => Double.NaN
               }
+            }
+
+            val min = getDoubleStat(s"${columnName}_min")
+            val max = getDoubleStat(s"${columnName}_max")
+            val avg = getDoubleStat(s"${columnName}_avg")
+            val stddev = getDoubleStat(s"${columnName}_stddev")
+            val sum = getDoubleStat(s"${columnName}_sum")
+            val count = statsRow.getAs[Long](s"${columnName}_count")
+            val countDistinct = statsRow.getAs[Long](s"${columnName}_countDistinct")
+            val values = Option(statsRow.getAs[Seq[Any]](s"${columnName}_topKList")).getOrElse(Seq.empty)
+
+            if (values.nonEmpty && count > topK) {
+              val grouped = values.groupBy(identity).mapValues(_.size)
+              val filtered = grouped.filter(_._2 > 1) // Remove entries with small frequencies
+              val topKValues = filtered.toSeq.sortBy(-_._2).take(topK)
+              val topKArray = topKValues.map(_._1.toString).toArray
+              val topKCounts = topKValues.map(_._2.toLong).toArray
 
               new MetadataBuilder()
                 .withMetadata(existingMetadata)
-                .putDouble("min", getDoubleStat(s"${columnName}_min"))
-                .putDouble("max", getDoubleStat(s"${columnName}_max"))
-                .putDouble("avg", getDoubleStat(s"${columnName}_avg"))
-                .putDouble("stddev", getDoubleStat(s"${columnName}_stddev"))
-                .putDouble("sum", getDoubleStat(s"${columnName}_sum"))
-                .putLong("count", statsRow.getAs[Long](s"${columnName}_count"))
-                .putLong("countDistinct", statsRow.getAs[Long](s"${columnName}_countDistinct"))
+                .putDouble("min", min)
+                .putDouble("max", max)
+                .putDouble("avg", avg)
+                .putDouble("stddev", stddev)
+                .putDouble("sum", sum)
+                .putLong("count", count)
+                .putLong("countDistinct", countDistinct)
+                .putStringArray("topKValues", topKArray)
+                .putLongArray("topKCounts", topKCounts)
                 .build()
-
-            case StringType =>
+            } else {
+              println(s"No valid data for topK computation in column: $columnName")
               existingMetadata
+            }
 
-            case BooleanType =>
+          case StringType =>
+            val values = Option(statsRow.getAs[Seq[String]](s"${columnName}_topKList")).getOrElse(Seq.empty)
+            if (values.nonEmpty) {
+              val grouped = values.groupBy(identity).mapValues(_.size)
+              val filtered = grouped.filter(_._2 > 1)
+              val topKValues = filtered.toSeq.sortBy(-_._2).take(topK)
+              val topKArray = topKValues.map(_._1).toArray
+              val topKCounts = topKValues.map(_._2.toLong).toArray
+
               new MetadataBuilder()
                 .withMetadata(existingMetadata)
-                .putLong("trueCount", statsRow.getAs[Long](s"${columnName}_trueCount"))
-                .putLong("falseCount", statsRow.getAs[Long](s"${columnName}_falseCount"))
-                .putLong("nullCount", statsRow.getAs[Long](s"${columnName}_nullCount"))
+                .putStringArray("topKValues", topKArray)
+                .putLongArray("topKCounts", topKCounts)
                 .build()
-
-            case _ =>
+            } else {
+              println(s"No valid data for topK computation in column: $columnName")
               existingMetadata
-          }
-          StructField(field.name, dataType, field.nullable, updatedMetadata)
-        } catch {
-          case ex: Exception =>
-            println(s"Error updating metadata for column: $columnName")
-            ex.printStackTrace()
-            StructField(field.name, dataType, field.nullable, existingMetadata)
+            }
+
+          case BooleanType =>
+            val trueCount = statsRow.getAs[Long](s"${columnName}_trueCount")
+            val falseCount = statsRow.getAs[Long](s"${columnName}_falseCount")
+            val nullCount = statsRow.getAs[Long](s"${columnName}_nullCount")
+            new MetadataBuilder()
+              .withMetadata(existingMetadata)
+              .putLong("trueCount", trueCount)
+              .putLong("falseCount", falseCount)
+              .putLong("nullCount", nullCount)
+              .build()
+
+          case _ =>
+            existingMetadata
         }
+        StructField(field.name, dataType, field.nullable, updatedMetadata)
+      } catch {
+        case ex: Exception =>
+          println(s"Error updating metadata for column: $columnName")
+          ex.printStackTrace()
+          StructField(field.name, dataType, field.nullable, existingMetadata)
       }
-
-      val updatedSchema = StructType(updatedFields)
-      val schemaUpdateEndTime = System.nanoTime()
-      println(f"Schema update time: ${(schemaUpdateEndTime - schemaUpdateStartTime) / 1e6}%.4f ms")
-
-      val dbUpdateStartTime = System.nanoTime()
-      val updateSQL = "UPDATE datasets SET status=?, progress=50, size=?, num_features=?, num_points=?, schema=? WHERE name=?"
-      using(dbConnection.prepareStatement(updateSQL)) { updateSummary =>
-        updateSummary.setString(1, "summarized")
-        val count = rawData.count()
-        updateSummary.setLong(2, count)
-        updateSummary.setLong(3, count)
-        updateSummary.setLong(4, count)
-        updateSummary.setString(5, simplifySchema(updatedSchema.json))
-        updateSummary.setString(6, datasetName)
-        updateSummary.executeUpdate()
-      }
-      val dbUpdateEndTime = System.nanoTime()
-      println(f"Database update time: ${(dbUpdateEndTime - dbUpdateStartTime) / 1e6}%.4f ms")
     }
-    val endTime = System.nanoTime()
-    println(f"Total processing time: ${(endTime - startTime) / 1e6}%.4f ms")
+
+    val updatedSchema = StructType(updatedFields)
+    val schemaUpdateEndTime = System.nanoTime()
+    println(s"Schema update time: ${(schemaUpdateEndTime - schemaUpdateStartTime) / 1e6} ms")
+    val schemaJson = updatedSchema.json
+    val simplifiedSchema = simplifySchema(schemaJson)
+
+    val dbUpdateStartTime = System.nanoTime()
+    val updateSQL = "UPDATE datasets SET status=?, progress=50, size=?, num_features=?, num_points=?, schema=? WHERE name=?"
+    using(dbConnection.prepareStatement(updateSQL)) { updateSummary =>
+      updateSummary.setString(1, "summarized")
+      val count = rawData.count()
+      updateSummary.setLong(2, count)
+      updateSummary.setLong(3, count)
+      updateSummary.setLong(4, count)
+      updateSummary.setString(5, simplifiedSchema)
+      updateSummary.setString(6, datasetName)
+      updateSummary.executeUpdate()
+    }
+    val dbUpdateEndTime = System.nanoTime()
+    println(s"Database update time: ${(dbUpdateEndTime - dbUpdateStartTime) / 1e6} ms")
   }
+  val endTime = System.nanoTime()
+  println(s"Total processing time: ${(endTime - startTime) / 1e6} ms")
+}
 
 
 
